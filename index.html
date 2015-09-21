@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MyPlan</title>
+    <meta name="MyPlan" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,900,300,100,300italic,400italic,100italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+</head>
+
+<body ng-app="calendarApp">
+
+<!--[if lte IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!--<div class="container" ng-controller="CalendarController">-->
+<!--<div ng-view=""></div>-->
+
+
+<div class="wrapper" ng-controller="CalendarController">
+
+    <!-- <calendar selected="day"></calendar>-->
+
+    <div class="mainMenu">
+
+        <div class="mainMenu__Logo">
+
+            <p class="mainMenu__Logo__Logotext">my<span class="logobold">plan</span></p>
+
+        </div>
+
+
+
+        <nav class="mainMenu__Nav">
+
+            <div class="mainMenu__Nav__left">
+                <h4><i class="fa fa-calendar fa-fw"></i>&nbsp;&nbsp; Kalender &nbsp;&nbsp;<i class="fa fa-sort-desc"  ng-click="toggleList()"></i></h4>
+
+                <div class="content" ng-repeat="list in lists">
+                    <li ng-class="{'hide': isHidingList}">{{list}}</li>
+                </div>
+
+                <h4><i class="fa fa-users fa-fw"></i>&nbsp;&nbsp; Freunde</h4>
+
+
+
+                <h4 ng-click="toggleForm()">
+                    <i class="fa fa-plus fa-fw" ></i>&nbsp;&nbsp;Event hinzufügen
+                </h4>
+
+                <div class="content" ng-class="{'hide': isHidingForm}">
+
+
+                    <form novalidate class="simple-form">
+                        <p>Titel:</p>
+                        <input type="text"/>
+
+                        <p>Datum:</p>
+                        <input type="date" />
+
+                        <button type="button">Speichern</button>
+                    </form>
+
+                </div>
+
+
+
+            </div>
+            <div class="mainMenu__Nav__right">
+            </div>
+        </nav>
+    </div>
+
+
+    <header>
+
+        <div class="header__upperHalf">
+
+            <div class="header__upperHalf__left">
+
+                <h2 class="header__upperHalf_description">{{listenName}}</h2>
+
+            </div>
+
+            <div class="header__upperHalf__right">
+                <p class="header__upperHalf__username">{{currentUser.Username}}</p>
+
+                <img class="header__upperHalf__userimage" ng-src="{{currentUser.pic}}" />
+
+            </div>
+
+        </div>
+
+
+        <div class="header__lowerHalf">
+
+            <div class="header__lowerHalf__wrapper">
+                <img class="resize turn180" src="../../images/Datumspfeil.png" ng-click="prev(4)" />
+                <p class="header__lowerHalf__date">{{month}}</p>
+                <img class="resize" src="../../images/Datumspfeil.png" ng-click="next(4)" />
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+
+    <div class="mainContent">
+
+        <div class="mainContent__Column1">
+            <div class="mainContent__Subcolumn__outer orange">
+                <img src="../../images/Kalenderpfeil.png" class="datumspfeil turn180" ng-click="prev(1)" />
+            </div>
+
+            <!--display all weekdays with correct week dates -->
+            <div ng-repeat="day in days">
+                <days display="day"></days>
+            </div>
+
+
+        </div>
+
+        <!-- display all users -->
+        <div ng-repeat="user in users">
+            <div class="mainContent__Column">
+
+                <div class="mainContent__Subcolumn__outer grey">
+                    <div class="userleft">
+
+                        <img class="header__upperHalf__userimage" ng-src="{{user.pic}}" />
+                    </div>
+
+                    <div class="userright">
+                        <p class="column__user">{{user.Username}}</p>
+                        <p class="column__eintrag">{{user.Eintraege}} Einträge</p>
+                    </div>
+                </div>
+
+             <div ng-repeat="columns in days" >
+                <div class="mainContent__Subcolumn__outer ">
+                   <!-- <div class="termin">
+
+                        <div class="eventIcons">
+                            <i class="fa fa-trash-o delIcon" ng-click="delEvent()"></i>
+                        </div>
+
+                        <p class="termin__name">{{events[0].Titel}}</p>
+                        <p class="termin__zeit"><i class="fa fa-clock-o"></i>&nbsp;{{events[0].Datum | date}}</p>
+                    </div>
+
+                    <div class="terminbottom">
+                    </div>-->
+                </div>
+             </div>
+
+            </div>
+
+        </div>
+
+        <div class="mainContent__Column1">
+            <div class="mainContent__Subcolumn__outer orange">
+                <img src="../../images/Kalenderpfeil.png" class="datumspfeil" ng-click="next(1)"  />
+            </div>
+
+            <!-- display 7 columns-->
+            <div ng-repeat="columns in days">
+                <div class="mainContent__Subcolumn__outer grey"></div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+<!--</div>-->
+
+<!--<div class="footer">
+  <div class="container">
+    <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+  </div>
+</div>-->
+
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<script>
+    !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+        (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+            r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+    }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/controllers/main.js"></script>
+<script src="scripts/controllers/about.js"></script>
+<!-- endbuild -->
+
+<!-- Moment.js and german moment.js file -->
+<script src="/bower_components/moment/moment.js"></script>
+<script src="/bower_components/moment/locale/de.js"></script>
+
+
+<!-- Directive -->
+<script src="scripts/directives/displayUsers.js"></script>
+<script src="scripts/directives/days.js"></script>
+
+</body>
+</html>
