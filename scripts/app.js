@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('calendarApp', [
+var app = angular.module('calendarAngularApp', [
     'ngAnimate',
     'ngAria',
     'ngCookies',

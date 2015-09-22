@@ -245,13 +245,67 @@ background-color:$main-grey;
 //Hauptcontent Rechts Unten
 
 .mainContent{
+	position: relative;
 float:right;
 width:79.27927927927928%; /* 880 / 1110 */
 height: 82.89473684210526%; /* 630 / 760 */
 background-color:$white;
-overflow:scroll;
-
+overflow: hidden;
 }
+	.calenderNav{
+		position: relative;
+		
+		.calenderNav__Item{
+			height: 80px;
+			
+			border-color: #f5f5f5;
+			border-width: 0.1%;
+			border-style: solid;
+			box-sizing: border-box;
+			float:left;	
+		}
+		
+		.user{
+			width: 21.25%;
+			left: 7.386363636363637%;
+		}
+		
+		.arrow{
+			width: 7.386363636363637%;
+			cursor: pointer;
+		}
+		
+		.right{
+			position: absolute;
+			right: 2px;
+			top:0;
+		}
+	}
+	
+	.calender{
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: scroll;
+		padding-bottom: 80px;
+		
+		.calenderDate{
+			height: 80px;
+			border-color: #f5f5f5;
+			border-width: 0.1%;
+			border-style: solid;
+			box-sizing: border-box;
+			float: left;
+		}
+		
+		.info{
+				width: 7.386363636363637%;
+		}
+		
+		.date{
+			width: 21.25%;
+		}
+	}
 
 	.userleft{
 		box-sizing:border-box;
@@ -288,13 +342,22 @@ overflow:scroll;
 
 	}
 
-	.mainContent__Column1{
-
+	.mainContent__Column_Left,
+	.mainContent__Column_Right{
+		position: absolute;
 		width: 7.386363636363637%; /* 65 / 880 */
 		height: 100%;
 		float:left;
 		background-color: $main-grey;
 
+	}
+	
+	.mainContent__Column_Left{
+		left: 0;
+	}
+	
+	.mainContent__Column_Right{
+		right: 0;
 	}
 
 		.mainContent__Subcolumn__outer{
@@ -378,7 +441,11 @@ overflow:scroll;
 		background-color: lighten(#a0dab1,15%);
 		height:90%;
 
-
+		&:hover{
+			.eventIcons {
+				display: block;
+			}
+		}
 	}
 
 		.termin__name{
@@ -401,8 +468,10 @@ overflow:scroll;
 		}
 
         .eventIcons {
-          float: right;
-          margin: 3% 3% 0 0;
+        	cursor: pointer;
+        	display: none;
+	          float: right;
+	          margin: 3% 3% 0 0;
         }
 
 	.terminbottom{
@@ -447,3 +516,8 @@ overflow:scroll;
 
 		color: #f6b2ab;
 	}
+
+
+.clearfix{
+	clear: both;
+}

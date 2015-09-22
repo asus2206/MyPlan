@@ -19,7 +19,7 @@
     <!-- endbuild -->
 </head>
 
-<body ng-app="calendarApp">
+<body ng-app="calendarAngularApp">
 
 <!--[if lte IE 8]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -40,58 +40,39 @@
             <p class="mainMenu__Logo__Logotext">my<span class="logobold">plan</span></p>
 
         </div>
-
-
-
+        
         <nav class="mainMenu__Nav">
-
             <div class="mainMenu__Nav__left">
-                <h4><i class="fa fa-calendar fa-fw"></i>&nbsp;&nbsp; Kalender &nbsp;&nbsp;<i class="fa fa-sort-desc"  ng-click="toggleList()"></i></h4>
-
-                <div class="content" ng-repeat="list in lists">
-                    <li ng-class="{'hide': isHidingList}">{{list}}</li>
-                </div>
-
-                <h4><i class="fa fa-users fa-fw"></i>&nbsp;&nbsp; Freunde</h4>
-
-
-
                 <h4 ng-click="toggleForm()">
                     <i class="fa fa-plus fa-fw" ></i>&nbsp;&nbsp;Event hinzufügen
                 </h4>
-
-                <div class="content" ng-class="{'hide': isHidingForm}">
-
-
-                    <form novalidate class="simple-form">
+                <div class="content">
+                    <form novalidate class="simple-form" ng-submit="saveDate()">
+                        <p>Benutzer:</p>
+                        <select ng-model="selUser" name="repeatSelect" id="repeatSelect">
+                            <option ng-repeat="user in users" value="{{user.Username}}">{{user.Username}}</option>
+                        </select>
                         <p>Titel:</p>
-                        <input type="text"/>
-
-                        <p>Datum:</p>
-                        <input type="date" />
-
-                        <button type="button">Speichern</button>
+                        <input ng-model="selTitel" type="text"/>
+                        <p>Tag:</p>
+                        <select ng-model="selDay" name="repeatSelect" id="repeatSelect">
+                            <option ng-repeat="day in days" value="{{day.dayNumber}}">{{day.dayNumber}}</option>
+                        </select>
+                        <p>Zeit:</p>
+                        <input ng-model="selTime" type="text" />
+                        <button type="submit">Speichern</button>
                     </form>
-
                 </div>
-
-
-
             </div>
             <div class="mainMenu__Nav__right">
             </div>
         </nav>
     </div>
 
-
     <header>
-
         <div class="header__upperHalf">
-
             <div class="header__upperHalf__left">
-
-                <h2 class="header__upperHalf_description">{{listenName}}</h2>
-
+                <h2 class="header__upperHalf_description">Der spaßige Familienplaner</h2>
             </div>
 
             <div class="header__upperHalf__right">
@@ -102,102 +83,64 @@
             </div>
 
         </div>
-
-
         <div class="header__lowerHalf">
 
             <div class="header__lowerHalf__wrapper">
-                <img class="resize turn180" src="../../images/Datumspfeil.png" ng-click="prev(4)" />
                 <p class="header__lowerHalf__date">{{month}}</p>
-                <img class="resize" src="../../images/Datumspfeil.png" ng-click="next(4)" />
-
             </div>
-
         </div>
-
     </header>
-
-
-
-
     <div class="mainContent">
-
-        <div class="mainContent__Column1">
-            <div class="mainContent__Subcolumn__outer orange">
-                <img src="../../images/Kalenderpfeil.png" class="datumspfeil turn180" ng-click="prev(1)" />
-            </div>
-
-            <!--display all weekdays with correct week dates -->
-            <div ng-repeat="day in days">
-                <days display="day"></days>
-            </div>
-
-
-        </div>
-
-        <!-- display all users -->
-        <div ng-repeat="user in users">
-            <div class="mainContent__Column">
-
-                <div class="mainContent__Subcolumn__outer grey">
-                    <div class="userleft">
-
-                        <img class="header__upperHalf__userimage" ng-src="{{user.pic}}" />
-                    </div>
-
-                    <div class="userright">
-                        <p class="column__user">{{user.Username}}</p>
-                        <p class="column__eintrag">{{user.Eintraege}} Einträge</p>
-                    </div>
-                </div>
-
-             <div ng-repeat="columns in days" >
-                <div class="mainContent__Subcolumn__outer ">
-                   <!-- <div class="termin">
-
-                        <div class="eventIcons">
-                            <i class="fa fa-trash-o delIcon" ng-click="delEvent()"></i>
-                        </div>
-
-                        <p class="termin__name">{{events[0].Titel}}</p>
-                        <p class="termin__zeit"><i class="fa fa-clock-o"></i>&nbsp;{{events[0].Datum | date}}</p>
-                    </div>
-
-                    <div class="terminbottom">
-                    </div>-->
-                </div>
-             </div>
-
-            </div>
-
-        </div>
-
-        <div class="mainContent__Column1">
-            <div class="mainContent__Subcolumn__outer orange">
-                <img src="../../images/Kalenderpfeil.png" class="datumspfeil" ng-click="next(1)"  />
-            </div>
-
-            <!-- display 7 columns-->
-            <div ng-repeat="columns in days">
-                <div class="mainContent__Subcolumn__outer grey"></div>
-            </div>
-
-        </div>
-
-
+        <!--Kalenderbereich. Alle Spalten + Hauptzeile (namen etc) -->
+        
+<div class="calenderNav">
+    <!-- Namen + Links / Rechts Pfeile!-->
+    <div class="calenderNav__Item arrow orange">
+        <img src="../../images/Kalenderpfeil.png" class="datumspfeil turn180" ng-click="prev()" />
     </div>
+    
+    <!-- display all users -->
+    <div  class="calenderNav__Item user" ng-repeat="user in users">
+        <div class="userleft">
 
+            <img class="header__upperHalf__userimage" ng-src="{{user.pic}}" />
+        </div>
 
+        <div class="userright">
+            <p class="column__user">{{user.Username}}</p>
+        </div>
+    </div>
+    
+    <div class="calenderNav__Item arrow right orange">
+        <img src="../../images/Kalenderpfeil.png" class="datumspfeil" ng-click="next()"  />
+    </div>
 </div>
-<!--</div>-->
-
-<!--<div class="footer">
-  <div class="container">
-    <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-  </div>
-</div>-->
-
-
+<div class="clearfix"></div>
+<!-- KalenderNavibereich Ende !-->
+        
+        
+        
+        
+<!-- ALLE Tage + Einträge !-->
+<div class="calender">
+    <div class="calenderDates" ng-repeat="day in days">
+        <days display="day"></days>
+        <div class="calenderDate date" ng-repeat="user in users">
+        <div class="termin" ng-repeat="event in events" ng-if="event.User == user.Username && event.Day == day.dayNumber">
+                <div class="eventIcons">
+                    <i class="fa fa-trash-o delIcon" ng-click='delEvent({{ event.id }})'></i>
+                </div>
+                <p class="termin__name">{{event.Titel}}</p>
+                <p class="termin__zeit"><i class="fa fa-clock-o"></i>&nbsp;&nbsp;{{event.Time}}</p>
+            </div>
+        </div>
+        <days display="day"></days>
+        <div class="clearfix"></div>
+    </div>
+</div>
+        
+        
+ </div>
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
     !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -238,7 +181,6 @@
 
 
 <!-- Directive -->
-<script src="scripts/directives/displayUsers.js"></script>
 <script src="scripts/directives/days.js"></script>
 
 </body>

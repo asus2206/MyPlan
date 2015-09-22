@@ -7,14 +7,11 @@
  * # MainCtrl
  * Controller of the calendarAngularApp
  */
-app.controller('CalendarController', function ($scope) {
-    this.awesomeThings = [
-        'HTML5 Boilerplate',
-        'AngularJS',
-        'Karma'
-    ];
+app.controller('CalendarController', function ($scope,$http,$log) {
 
-    //SHOW HIDE LISTS
+    // Habe ich auskommentiert und aus .html geloescht.
+    // Sieht MMN besser aus...
+    /*//SHOW HIDE LISTS
     $scope.isHidingList = true;
     $scope.toggleList = function() {
         $scope.isHidingList = !$scope.isHidingList;
@@ -27,150 +24,107 @@ app.controller('CalendarController', function ($scope) {
     $scope.toggleForm = function() {
         $scope.isHidingForm = !$scope.isHidingForm;
 
-    };
+    };*/
 
-
+    /* ######
+        CONTROLLER ATTRIBUTES
+       ######*/
+    
     var today = moment();
+    
+    $scope.today = today;
+    $scope.actualMonth = today.month();
+    $scope.actualYear = today.year();
 
-    //LISTS
-    $scope.lists = ["Webprogrammieren", "Familie", "Beste Freunde"];
-    $scope.listenName = $scope.lists[0];
+    
+    /*
+        users / events array for data from mysql db
+    */
+    $scope.users = [];
+    $scope.events = [];
 
-    //MONTHS
-    var monthNumber = (today.week() / 4) - 1;
-    $scope.month = today.month(monthNumber).format("MMMM, YYYY");
+    /*
+        First start. Set calender dates and load Users/Events...
+    */
+    setCalenderMonthData();
+    loadUsers();
+    loadEvents();
+    
 
-    //WEEKs + DAYS
-    var weekOfYear = today.week();
-
-    $scope.days = [
-        { weekDay: today.day(1).format("ddd"),
-            dayNumber: today.day(1).week(weekOfYear).format('DD')
-        },
-        { weekDay: today.day(2).format("ddd"),
-            dayNumber: today.day(2).week(today.week()).format('DD')
-        },
-        { weekDay: today.day(3).format("ddd"),
-            dayNumber: today.day(3).week(today.week()).format('DD')
-        },
-        { weekDay: today.day(4).format("ddd"),
-            dayNumber: today.day(4).week(today.week()).format('DD')
-        },
-        { weekDay: today.day(5).format("ddd"),
-            dayNumber: today.day(5).week(today.week()).format('DD')
-        },
-        { weekDay: today.day(6).format("ddd"),
-            dayNumber: today.day(6).week(today.week()).format('DD')
-        },
-        { weekDay: today.day(7).format("ddd"),
-            dayNumber: today.day(0).week(today.week()).format('DD')
+    /* ######
+        CONTROLLER FUNCTIONS
+       ######*/
+    
+    function setCalenderMonthData(){
+        $scope.month = today.month($scope.actualMonth).format("MMMM, YYYY");
+        $scope.actualMonthDayCount = today.month($scope.actualMonth).daysInMonth();
+        
+        $scope.days = [];
+        // Lädt Anzahl der Tage des aktuellen Monats und lädt weekDay + dayNumber
+        for (var i = 0; i <= $scope.actualMonthDayCount; i += 1) {
+            $scope.days.push({ 
+                weekDay: today.month($scope.actualMonth).date(i + 1).format("ddd"),
+                dayNumber: i + 1
+            });
         }
-    ];
-
-    /*$scope.nextMonth = function() {
-        $scope.nextWeek(4);
-
-        monthNumber = (weekOfYear / 4) - 1;
-        $scope.month = today.month(monthNumber).format("MMMM, YYYY");
-
+    };
+    
+    /*
+        change the actual view and show data from next month
+    */
+    $scope.next = function() {
+        $scope.actualMonth++;
+        setCalenderMonthData();
+        loadEvents();
+    };
+    
+    /*
+        change the actual view and show data from prev month
+    */
+    $scope.prev = function() {
+        $scope.actualMonth--;
+        setCalenderMonthData();
+        loadEvents();
     };
 
-    $scope.prevMonth = function() {
-        $scope.prevWeek(4);
-
-        monthNumber = (weekOfYear / 4) - 1;
-        $scope.month = today.month(monthNumber).format("MMMM, YYYY");
-    }; */
-
-    $scope.next = function(numOfWeeks) {
-        weekOfYear = today.add(numOfWeeks, 'week').format("W");
-        $scope.setDays(weekOfYear);
+    /*
+        use sail-rest-api to get all users from mysql db
+    */
+    function loadUsers(){
+        $http.get("http://localhost:1337/user")
+         .success(function(data){
+            $scope.users=data;
+         });
     };
 
-
-    $scope.prev = function(numOfWeeks) {
-        weekOfYear = today.subtract(numOfWeeks, 'week').format("W");
-        $scope.setDays(weekOfYear);
+    /*
+        use sail-rest-api to get all events by actual month from mysql db
+    */
+    function loadEvents(){
+        $http.get("http://localhost:1337/event/eventsOfMonth?month=" + ($scope.actualMonth + 1) )
+         .success(function(data){
+            $scope.events=data;
+         });
     };
 
-    $scope.setDays = function(weekOfYear) {
+    /*
+        use sail-rest-api to delete or destroy an event by id
+    */
+    $scope.delEvent = function(id) {
+        $http.get("http://localhost:1337/event/destroy?id=" + id)
+         .success(function(){
+            loadEvents();
+         });
+    };
 
-            $scope.days = [
-                { weekDay: today.day(1).format("ddd"),
-                    dayNumber: today.day(1).week(weekOfYear).format('DD')
-                },
-                { weekDay: today.day(2).format("ddd"),
-                    dayNumber: today.day(2).week(today.week()).format('DD')
-                },
-                { weekDay: today.day(3).format("ddd"),
-                    dayNumber: today.day(3).week(today.week()).format('DD')
-                },
-                { weekDay: today.day(4).format("ddd"),
-                    dayNumber: today.day(4).week(today.week()).format('DD')
-                },
-                { weekDay: today.day(5).format("ddd"),
-                    dayNumber: today.day(5).week(today.week()).format('DD')
-                },
-                { weekDay: today.day(6).format("ddd"),
-                    dayNumber: today.day(6).week(today.week()).format('DD')
-                },
-                { weekDay: today.day(7).format("ddd"),
-                    dayNumber: today.day(0).week(today.week()).format('DD')
-                }
-
-            ];
-
-        monthNumber = (weekOfYear / 4) - 1;
-        $scope.month = today.month(monthNumber).format("MMMM, YYYY");
-
-    }
-
-    $scope.users = [
-        { Username: "Ulli",
-            Eintraege: 5,
-            pic: "../../images/Mayschnee.jpg"
-        },
-        { Username: "Lorenz",
-            Eintraege: 1,
-            pic: "../../images/Mayschnee.jpg"
-        },
-        { Username: "Jacky",
-            Eintraege: 0,
-            pic: "../../images/Mayschnee.jpg"
-        },
-        { Username: "Christoph",
-            Eintraege: 3,
-            pic: "../../images/Mayschnee.jpg"
-        },
-    ];
-
-    $scope.currentUser = $scope.users[0];
-
-    //EVENTS
-
-
-    $scope.events = [
-        {
-            Titel: "IPad zurückgeben",
-            Datum: new Date('2015', '09', '01'),
-            User: "Ulli"
-
-        },
-
-        {
-            Titel: "eCampus Abgabe",
-            Datum: new Date("2015", "09", "24"),
-            User: "Christoph"
-        }
-
-    ];
-
-    //Löschen eines E
-    $scope.delEvent = function() {
-
-
-
-    }
-
-
+    /*
+        use sail-rest-api to create an event by data from html form
+    */
+    $scope.saveDate = function(){
+        var args = "Titel=" + $scope.selTitel + "&Day=" + $scope.selDay + "&Month=" + ($scope.actualMonth + 1) + "&Year=" + $scope.actualYear + "&Time=" + $scope.selTime + "&User=" + $scope.selUser;
+        $http.get("http://localhost:1337/event/create?" + args)
+         .success(function(){
+            loadEvents();
+         });
+    };
 });
